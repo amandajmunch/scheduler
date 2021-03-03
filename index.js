@@ -5,6 +5,7 @@ const express = require('express'),
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(express.static('build'));
 app.use(require('./router'));
 
 app.listen(PORT, ()=>{

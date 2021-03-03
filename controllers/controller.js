@@ -1,0 +1,68 @@
+const Appointments = require('../models/appointment');
+
+const controller = {};
+
+controller.index = (req, res) => {
+  Appointments
+    .findAll()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch(err => console.log('ERROR: ', err));
+}
+
+controller.create = (req, res) => {
+  console.log("Adding to db:", req.body);
+  const start_time = req.body.start_time,
+        end_time = req.body.end_time,
+        price = req.body.price,
+        status = req.body.status;
+
+  Appointments
+    .create(start_time,end_time, price, status)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch(err => console.log('CONTROLLER ERROR: ', err));
+}
+
+controller.update = (req, res) => {
+  const start_time = req.body.start_time,
+        end_time = req.body.end_time,
+        price = req.body.price,
+        status = req.body.status,
+        id = req.params.id;
+  console.log(req.body);
+    Appointments
+        .update(id, start_time,end_time, price, status)
+        .then(data => res.json(data))
+        .catch(err => console.log('ERROR', err));
+
+};
+
+
+controller.delete = (req, res) => {
+  const id = req.params.id;
+
+  Appointments
+    .delete(id)
+    .then((data) => {
+      res.send('Deleted from DB.');
+    })
+    .catch(err => console.log('ERROR: ', err));
+}
+
+controller.show = (req, res) => {
+    const id = req.params.id;
+    Appointments
+        .findById(id)
+        .then((data) => {
+            res.send(data);
+        })
+        .catch(err => console.log('ERROR:', err));
+};
+
+
+
+
+module.exports = controller;

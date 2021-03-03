@@ -1,0 +1,27 @@
+h3 {
+  color: red;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+/*Appointments CSS*/
+
+.appointments {
+  display: flex;
+  flex-direction: column;
+}
+
+.viewAppointment {
+  display: flex;
+  justify-content: space-between;
+}
+
+.top {
+  display: flex;
+}
