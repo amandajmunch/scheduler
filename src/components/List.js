@@ -71,6 +71,7 @@ class List extends Component {
                   <th scope="col">End Time</th>
                   <th scope="col">Price</th>
                   <th scope="col">Status</th>
+                  <th scope="col"></th>
               </tr>
           </thead>
           <tbody>

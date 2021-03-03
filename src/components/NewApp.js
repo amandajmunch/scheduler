@@ -1,41 +1,66 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/button';
+
 
 class NewApp extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      //  formControls: {
+      //   startTime: '',
+      //   endTime: '',
+      //   price: '',
+      //   status: ''
+      // },
       formControls: {
-        startTime: {
-          value: ''
-        },
-        endTime: {
-          value: ''
-        },
-        price: {
-          value: ''
-        },
-        status: {
-          value: ''
-        }
-      }
-    }
+          start_time: {
+            value: ''
+          },
+          end_time: {
+            value: ''
+          },
+          price: {
+            value: ''
+          },
+          status: {
+            value: ''
+          }
+      },
+        show: false
+      };
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleChange = this.handleChange.bind(this);
   }
 
-  inputChangeHandler = (e) => {
-    let formControls = { ...this.state.formControls };
-    formControls[e.target.name] = e.target.value;
-    this.setState({
-      formControls
-    });
+  // handleChange(event) {
+  //   const target = event.target;
+  //   const value = target.value;
+  //   const name = target.name;
+  //   this.setState({
+  //     [name]: value
+  //   });
+  // }
+
+
+  handleChange(e){
+   let formControls = this.state.formControls;
+   formControls[e.target.name] = e.target.value;
+   this.setState({
+    formControls
+   });
   }
 
-  formHandler = (e, formControls) => {
+  handleSubmit(e, formControls) {
     e.preventDefault();
     Axios.post('http://localhost:8080/appointments/', this.state.formControls)
       .then(function(response) {
         console.log(response);
         window.location.reload();
+        this.props.closeModal();
         //Perform action based on response
       })
       .catch(function(error) {
@@ -45,48 +70,54 @@ class NewApp extends Component {
   }
 
 
+
   render() {
     return (
       <div className="NewApp">
-        <form noValidate onSubmit={this.formHandler.bind(this)}>
-          <label htmlFor="startTime">startTime</label>
-          <input id="startTime"
-            name="startTime"
-            type="text"
-            onChange={this.inputChangeHandler.bind(this)}
-            value={this.state.formControls.startTime.value}
-            required
-          />
+        <Modal
+          show={this.props.isOpen}
+          onHide={this.props.closeModal}
+          backdrop="static"
+        >
+      <Modal.Header closeButton>
+        <Modal.Title>Create New Appointment</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group controlId="start_time">
+            <Form.Label>Start Date/Time</Form.Label>
+            <Form.Control type="text"
+              placeholder="Start Time"
+              name="start_time"
+              onChange={this.handleChange}
+            />
+            <Form.Text className="text-muted">
+              We'll never share your email with anyone else.
+            </Form.Text>
+          </Form.Group>
 
-          <label htmlFor="endTime">endTime</label>
-          <input id="endTime"
-            name="endTime"
-            type="text"
-            onChange={this.inputChangeHandler.bind(this)}
-            value={this.state.formControls.endTime.value}
-            required
-          />
+          <Form.Group controlId="end_time">
+            <Form.Label>End Date/Time</Form.Label>
+            <Form.Control type="text" placeholder="End Time" name="end_time" onChange={this.handleChange} />
+          </Form.Group>
 
-          <label htmlFor="price">price</label>
-          <input id="price"
-            name="price"
-            type="text"
-            onChange={this.inputChangeHandler.bind(this)}
-            value={this.state.formControls.price.value}
-            required
-          />
+           <Form.Group controlId="price">
+            <Form.Label>Price</Form.Label>
+            <Form.Control type="text" placeholder="Price" name="price" onChange={this.handleChange} />
+          </Form.Group>
 
-          <label htmlFor="status">status</label>
-          <input id="status"
-            name="status"
-            type="file"
-            onChange={this.inputChangeHandler.bind(this)}
-            value={this.state.formControls.price.status}
-            required
-          />
-
-          <button>Add Appointment</button>
-      </form>
+           <Form.Group controlId="status">
+            <Form.Label>Status</Form.Label>
+            <Form.Control type="text" placeholder="Status" name="status" onChange={this.handleChange} />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={this.handleSubmit}>
+          Submit
+        </Button>
+      </Modal.Footer>
+    </Modal>
     </div>
     );
   }

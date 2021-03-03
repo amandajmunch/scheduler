@@ -63,7 +63,7 @@ export class Sort extends Component {
               />
             </div>
             <div className="col-sm-3 form-group">
-              <button type="submit" className="btn btn-success">Filter</button>
+              <button type="submit" className="btn btn-primary">Filter</button>
             </div>
           </div>
         </form>

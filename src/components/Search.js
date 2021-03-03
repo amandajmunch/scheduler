@@ -55,6 +55,7 @@ class Search extends Component {
         <div className="col-sm-3 form-group">
           <button type="submit" className="btn btn-success">Search</button>
         </div>
+
       </div>
     )
   }
