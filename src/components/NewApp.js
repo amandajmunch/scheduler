@@ -10,62 +10,42 @@ class NewApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //  formControls: {
-      //   startTime: '',
-      //   endTime: '',
-      //   price: '',
-      //   status: ''
-      // },
       formControls: {
-          start_time: {
-            value: ''
-          },
-          end_time: {
-            value: ''
-          },
-          price: {
-            value: ''
-          },
-          status: {
-            value: ''
-          }
+        start_time: {
+          value: ''
+        },
+        end_time: {
+          value: ''
+        },
+        price: {
+          value: ''
+        },
+        status: {
+          value: ''
+        }
       },
-        show: false
-      };
-      this.handleSubmit = this.handleSubmit.bind(this);
-      this.handleChange = this.handleChange.bind(this);
+      show: false
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  // handleChange(event) {
-  //   const target = event.target;
-  //   const value = target.value;
-  //   const name = target.name;
-  //   this.setState({
-  //     [name]: value
-  //   });
-  // }
-
-
-  handleChange(e){
-   let formControls = this.state.formControls;
-   formControls[e.target.name] = e.target.value;
-   this.setState({
-    formControls
-   });
+  handleChange(e) {
+    let formControls = this.state.formControls;
+    formControls[e.target.name] = e.target.value;
+    this.setState({
+      formControls
+    });
   }
 
   handleSubmit(e, formControls) {
     e.preventDefault();
     Axios.post('http://localhost:8080/appointments/', this.state.formControls)
       .then(function(response) {
-        console.log(response);
-        window.location.reload();
         this.props.closeModal();
-        //Perform action based on response
       })
       .catch(function(error) {
         console.log(error);
-        //Perform action based on error
       });
   }
 
@@ -91,9 +71,6 @@ class NewApp extends Component {
               name="start_time"
               onChange={this.handleChange}
             />
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
-            </Form.Text>
           </Form.Group>
 
           <Form.Group controlId="end_time">

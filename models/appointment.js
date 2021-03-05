@@ -10,7 +10,6 @@ Appointment.findById = (id) => {
   );
 }
 
-
 // select from appointments where start_time like
 
 Appointment.create = (start_time, end_time, price, status) => {

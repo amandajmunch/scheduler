@@ -53,7 +53,7 @@ class Search extends Component {
           <MDBInput hint="Search" type="text" containerClass="mt-0" />
         </MDBCol>
         <div className="col-sm-3 form-group">
-          <button type="submit" className="btn btn-success">Search</button>
+          <button type="submit" className="btn btn-outline-success">Search</button>
         </div>
 
       </div>

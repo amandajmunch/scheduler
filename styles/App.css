@@ -17,11 +17,15 @@ h3 {
   flex-direction: column;
 }
 
-.viewAppointment {
+/*.viewAppointment {
   display: flex;
   justify-content: space-between;
-}
+}*/
 
 .top {
   display: flex;
 }
+/*
+.modal-body {
+  height: 200px;
+}*/

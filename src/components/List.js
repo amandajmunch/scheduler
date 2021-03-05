@@ -1,20 +1,36 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef, Component } from 'react';
 import Axios from 'axios';
 import View from './View';
 import '../../styles/App.css';
+
+function loop(){
+    let rand = Math.round(Math.random() * (3000 - 500)) + 500;
+    setTimeout(()=> {
+        test();
+        loop();
+      }, rand);
+}
 
 class List extends Component {
   constructor() {
     super();
     this.state = {
       appointments: [],
-      status: ''
+      status: '',
+      isOpen: false,
+      id: 0,
+      count: 0
     };
     this.deleteAppointment = this.deleteAppointment.bind(this);
-    this.updateStatus = this.updateStatus.bind(this);
+    this.openModal = this.openModal.bind(this);
   }
 
   componentDidMount() {
+    this.getAppointments();
+    // loop();
+  }
+
+  getAppointments(){
     Axios.get('http://localhost:8080/appointments')
       .then(response => {
         this.setState({
@@ -26,42 +42,55 @@ class List extends Component {
       })
   }
 
-  // showAppointments() {
-  // if (this.state.appointments) {
-  //   return this.state.results.map((result, index) => {
-  //     return <View key={index} result={result} deleteAppointment={this.deleteAppointment} updateStatus={this.updateStatus}/>
-  //   })
-  // }
-  // }
+  createRandomAppointment(){
+    let appointmentData = {
+         start_time:'2020-MAR-25 09:30:00',
+         end_time:'2020-MAR-25 11:30:00',
+         price:200,
+         status:'Pending'
+    };
 
-
-
-  deleteAppointment(appointment) {
-    Axios.delete(`http://localhost:8080/appointments/${appointment.id}`)
-      .then((response) => {
-        // this.showAppointments();
-        // window.location.reload();
-        console.log('updatee');
+    Axios.post('http://localhost:8080/appointments/', appointmentData)
+      .then(function(response) {
+        console.log(appointmentData);
       })
       .catch(function(error) {
         console.log(error);
       });
   }
 
-  updateStatus(appointment) {
-    Axios.put(`http://localhost:8080/appointments/${appointment.id}`, {
-        status: this.state.status
+
+//open and close modal
+  openModal(id){
+    this.setState({
+      isOpen: true,
+      id: id
+    });
+
+  }
+
+  closeModal(){
+    this.setState({
+      isOpen: false
+    });
+    this.getAppointments();
+  }
+
+  deleteAppointment(id) {
+    Axios.delete(`http://localhost:8080/appointments/${id}`)
+      .then((response) => {
+        this.getAppointments();
       })
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(err);
+      .catch(function(error) {
+        console.log(error);
       });
   }
 
+  test(){
+    console.log('sending');
+  }
+
   render() {
-    console.log(this.state.appointments);
     return (
       <div className="appointments">
          <table className="table">
@@ -71,24 +100,37 @@ class List extends Component {
                   <th scope="col">End Time</th>
                   <th scope="col">Price</th>
                   <th scope="col">Status</th>
-                  <th scope="col"></th>
+                  <th scope="col">View/Delete</th>
               </tr>
           </thead>
           <tbody>
             {
-              this.state.appointments.map((p, index) => {
-                return  <tr key={index}>
+              this.state.appointments.map((p) => {
+                return  <tr key={p.id}>
                         <td>{p.start_time}</td>
                         <td>{p.end_time}</td>
                         <td>${p.price}</td>
                         <td>{p.status}</td>
                         <td>
-                          <button className="button" onClick={(e) => this.deleteAppointment()}>
-                            View
+                          <button className="btn btn-outline-secondary" onClick={(e)=>this.openModal(p.id)}>
+                            View/Edit
+                          </button>
+                          <button className="btn btn-outline-danger" onClick={(e)=>this.deleteAppointment(p.id)}>
+                            Delete
                           </button>
                         </td>
                         </tr>
                 })
+            }
+
+            { this.state.isOpen ?
+                <View
+                  closeModal={this.closeModal.bind(this)}
+                  isOpen={this.state.isOpen}
+                  id={this.state.id}
+                />
+                  :
+                    null
             }
           </tbody>
         </table>

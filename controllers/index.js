@@ -2,6 +2,7 @@ const router = require('express').Router();
 const controller = require('./controller');
 
 router.post('/', controller.create);
+// router.post('/', controller.createRandom);
 router.get('/', controller.index);
 router.get('/:id', controller.show);
 router.put('/:id', controller.update);
