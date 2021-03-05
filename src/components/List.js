@@ -3,10 +3,29 @@ import Axios from 'axios';
 import View from './View';
 import '../../styles/App.css';
 
+//function for random DB entry
+function createRandomAppointment(){
+    let appointmentData = {
+         start_time:'2020-MAR-25 09:30:00',
+         end_time:'2020-MAR-25 11:30:00',
+         price:200,
+         status:'Pending'
+    };
+
+    Axios.post('http://localhost:8080/appointments/', appointmentData)
+      .then(function(response) {
+        console.log(appointmentData);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+//create random timeout and reset each time
 function loop(){
-    let rand = Math.round(Math.random() * (3000 - 500)) + 500;
+    let rand = Math.round(Math.random() * (600000 - 30000)) + 30000;
     setTimeout(()=> {
-        test();
+        createRandomAppointment();
         loop();
       }, rand);
 }
@@ -25,10 +44,17 @@ class List extends Component {
     this.openModal = this.openModal.bind(this);
   }
 
-  componentDidMount() {
-    this.getAppointments();
-    // loop();
-  }
+  //each second, get appointments as random db entries occur
+   componentDidMount() {
+    this.interval = setInterval(() =>{
+      this.getAppointments();
+      loop();
+      }, 1000);
+    }
+
+    componentWillUnmount() {
+      clearInterval(this.interval);
+    }
 
   getAppointments(){
     Axios.get('http://localhost:8080/appointments')
@@ -40,23 +66,6 @@ class List extends Component {
       .catch(e => {
         console.log(e);
       })
-  }
-
-  createRandomAppointment(){
-    let appointmentData = {
-         start_time:'2020-MAR-25 09:30:00',
-         end_time:'2020-MAR-25 11:30:00',
-         price:200,
-         status:'Pending'
-    };
-
-    Axios.post('http://localhost:8080/appointments/', appointmentData)
-      .then(function(response) {
-        console.log(appointmentData);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
   }
 
 
