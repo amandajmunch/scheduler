@@ -23,7 +23,7 @@ class View extends Component {
     Axios.get(`http://localhost:8080/appointments/${this.props.id}`)
       .then((response) => {
        this.setState({
-          start_time: response.data.start_time,
+          start_time:response.data.start_time,
           end_time: response.data.end_time,
           price: response.data.price,
           status: response.data.status,
@@ -53,6 +53,7 @@ class View extends Component {
 
 // https://flaviocopes.com/react-edit-doubleclick/ referenced for doubleclick functionality
   render() {
+    // console.log(this.props);
     return (
       <div className="viewAppointment">
         <Modal
@@ -64,8 +65,8 @@ class View extends Component {
             <Modal.Title>View Appointment</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-             <h3>{this.state.start_time}</h3>
-             <p>{this.state.end_time}</p>
+             <h3>{this.props.formatDate(this.state.start_time)}</h3>
+             <p>{this.props.formatDate(this.state.end_time)}</p>
              <p>{this.state.price}</p>
             { this.state.edit ?
                 <input

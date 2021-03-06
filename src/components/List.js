@@ -2,19 +2,21 @@ import React, { useState, useEffect, useRef, Component } from 'react';
 import Axios from 'axios';
 import View from './View';
 import '../../styles/App.css';
+import moment from 'moment';
+
 
 //function for random DB entry
 function createRandomAppointment(){
     let appointmentData = {
-         start_time:'2020-MAR-25 09:30:00',
-         end_time:'2020-MAR-25 11:30:00',
+         start_time:'2020-03-25 09:30:00',
+         end_time:'2020-03-25 11:30:00',
          price:200,
          status:'Pending'
     };
 
     Axios.post('http://localhost:8080/appointments/', appointmentData)
       .then(function(response) {
-        console.log(appointmentData);
+        return;
       })
       .catch(function(error) {
         console.log(error);
@@ -23,7 +25,7 @@ function createRandomAppointment(){
 
 //create random timeout and reset each time
 function loop(){
-    let rand = Math.round(Math.random() * (600000 - 30000)) + 30000;
+    let rand = Math.round(Math.random() * (600000 - 60000)) + 60000;
     setTimeout(()=> {
         createRandomAppointment();
         loop();
@@ -42,6 +44,7 @@ class List extends Component {
     };
     this.deleteAppointment = this.deleteAppointment.bind(this);
     this.openModal = this.openModal.bind(this);
+    this.formatDate = this.formatDate.bind(this);
   }
 
   //each second, get appointments as random db entries occur
@@ -55,6 +58,12 @@ class List extends Component {
     componentWillUnmount() {
       clearInterval(this.interval);
     }
+
+    formatDate(date){
+      let newDate = new Date(date).toLocaleString();
+      return newDate;
+    }
+
 
   getAppointments(){
     Axios.get('http://localhost:8080/appointments')
@@ -95,9 +104,6 @@ class List extends Component {
       });
   }
 
-  test(){
-    console.log('sending');
-  }
 
   render() {
     return (
@@ -116,8 +122,8 @@ class List extends Component {
             {
               this.state.appointments.map((p) => {
                 return  <tr key={p.id}>
-                        <td>{p.start_time}</td>
-                        <td>{p.end_time}</td>
+                        <td>{this.formatDate(p.start_time)}</td>
+                        <td>{this.formatDate(p.end_time)}</td>
                         <td>${p.price}</td>
                         <td>{p.status}</td>
                         <td>
@@ -136,6 +142,7 @@ class List extends Component {
                 <View
                   closeModal={this.closeModal.bind(this)}
                   isOpen={this.state.isOpen}
+                  formatDate={this.formatDate.bind(this)}
                   id={this.state.id}
                 />
                   :

@@ -62,7 +62,16 @@ controller.show = (req, res) => {
         .catch(err => console.log('ERROR:', err));
 };
 
-
+controller.showName = (req, res) => {
+    const id = req.params.id;
+    const name = req.params.name;
+    Appointments
+        .findByName(name)
+        .then((data) => {
+            res.send(data);
+        })
+        .catch(err => console.log('ERROR:', err));
+};
 
 
 module.exports = controller;

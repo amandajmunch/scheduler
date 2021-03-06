@@ -15,6 +15,7 @@ class Search extends Component {
 
   handleChange(e) {
     this.setState({ search: e.target.value });
+    console.log(this.state.search);
   }
 
   handleSubmit(e) {
@@ -50,7 +51,7 @@ class Search extends Component {
     return (
       <div className="searchPage d-flex">
         <MDBCol md="6">
-          <MDBInput hint="Search" type="text" containerClass="mt-0" />
+          <MDBInput hint="Search" type="text" containerClass="mt-0" onChange={this.handleChange}/>
         </MDBCol>
         <div className="col-sm-3 form-group">
           <button type="submit" className="btn btn-outline-success">Search</button>

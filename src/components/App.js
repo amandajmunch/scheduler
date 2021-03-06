@@ -4,6 +4,8 @@ import List from './List';
 import Search from './Search';
 import Sort from './Sort';
 import NewApp from './NewApp';
+import Axios from 'axios';
+
 
 class App extends Component {
   constructor(){
@@ -26,6 +28,16 @@ class App extends Component {
       isOpen: false
     });
   }
+
+  // componentDidMount(){
+  //     Axios.get('http://localhost:8080/appointments?start_time=2020-01-25 09:30:00')
+  //       .then(response => {
+  //         console.log(response.data);
+  //       })
+  //       .catch(e => {
+  //         console.log(e);
+  //       })
+  // }
 
 //ternary operator, if openModal state is true, display modal. False, display none
   render() {
