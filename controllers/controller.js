@@ -63,8 +63,7 @@ controller.show = (req, res) => {
 };
 
 controller.showName = (req, res) => {
-    const id = req.params.id;
-    const name = req.params.name;
+    let name = '%' + req.params.name + '%';
     Appointments
         .findByName(name)
         .then((data) => {

@@ -25,19 +25,20 @@ function createRandomAppointment(){
 
 //create random timeout and reset each time
 function loop(){
-    let rand = Math.round(Math.random() * (600000 - 60000)) + 60000;
+    let rand = Math.round(Math.random() * (12000000 - 600000)) + 600000;
     setTimeout(()=> {
         createRandomAppointment();
+        this.getAppointments();
         loop();
       }, rand);
 }
 
 class List extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       appointments: [],
-      status: '',
+      searched: null,
       isOpen: false,
       id: 0,
       count: 0
@@ -45,12 +46,15 @@ class List extends Component {
     this.deleteAppointment = this.deleteAppointment.bind(this);
     this.openModal = this.openModal.bind(this);
     this.formatDate = this.formatDate.bind(this);
+    this.filterAppointment = this.filterAppointment.bind(this);
+    this.getAppointments = this.getAppointments.bind(this);
   }
 
   //each second, get appointments as random db entries occur
    componentDidMount() {
+    this.getAppointments();
     this.interval = setInterval(() =>{
-      this.getAppointments();
+
       loop();
       }, 1000);
     }
@@ -64,10 +68,10 @@ class List extends Component {
       return newDate;
     }
 
-
   getAppointments(){
     Axios.get('http://localhost:8080/appointments')
       .then(response => {
+        console.log('getting appointments');
         this.setState({
           appointments: response.data
         });
@@ -77,6 +81,31 @@ class List extends Component {
       })
   }
 
+
+    componentWillReceiveProps(props) {
+      if (props.result !== null) {
+        this.setState({ searched: props.result });
+        setTimeout(()=> {
+          this.filterAppointment();
+        }, 500);
+      };
+
+      if(props.result !== null && props.search == "" || undefined || null){
+        console.log('null search');
+      }
+  }
+
+
+  filterAppointment(props){
+    let data = this.state.appointments;
+    let searched = this.state.searched;
+        data = data.filter(function(item){
+          return item.price == searched.price;
+        });
+    this.setState({
+      appointments: data
+    });
+  }
 
 //open and close modal
   openModal(id){
@@ -103,7 +132,6 @@ class List extends Component {
         console.log(error);
       });
   }
-
 
   render() {
     return (

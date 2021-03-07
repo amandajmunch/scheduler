@@ -2,11 +2,15 @@ CREATE DATABASE nielsen;
 
 DROP TABLE IF EXISTS appointments CASCADE;
 
+
+SET TIME ZONE 'EST';
+SHOW timezone;
+
 CREATE TABLE appointments(
   id SERIAL PRIMARY KEY NOT NULL,
   -- date_created TIMESTAMP NOT NULL,
-  start_time TIMESTAMP NOT NULL,
-  end_time TIMESTAMP NOT NULL,
+  start_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'EST'),
+  end_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'EST'),
   -- car_model VARCHAR(255) NOT NULL,
   -- client_name VARCHAR(255) NOT NULL,
   -- client_contact VARCHAR(255) NOT NULL,

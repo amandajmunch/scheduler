@@ -12,9 +12,9 @@ Appointment.findById = (id) => {
 
 // select from appointments where start_time like
 
-Appointment.findByName = (name) => {
+Appointment.findByName = (start_time) => {
   return db.one(
-    `SELECT * FROM appointments WHERE appointments.start_time = '$1'`, [name]
+    `SELECT * FROM appointments WHERE start_time::text LIKE $1`, [start_time]
   );
 }
 

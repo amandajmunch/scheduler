@@ -3,8 +3,8 @@ const controller = require('./controller');
 
 router.post('/', controller.create);
 router.get('/', controller.index);
+router.get('/search/:name', controller.showName);
 router.get('/:id', controller.show);
-router.get('/?start_time=:name', controller.showName);
 router.put('/:id', controller.update);
 router.delete('/:id', controller.delete);
 
