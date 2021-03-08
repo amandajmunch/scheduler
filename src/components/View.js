@@ -96,7 +96,7 @@ class View extends Component {
                   }}
                 >Status: {this.state.status}</p>
               }
-              <h6 className="text-muted">Double click above to change status</h6>
+              <small className="text-muted">Double click above to change status</small>
              <br/>
           </Modal.Body>
           <Modal.Footer>
