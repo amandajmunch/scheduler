@@ -4,33 +4,36 @@ import View from './View';
 import '../../styles/App.css';
 import moment from 'moment';
 
-
 //function for random DB entry
-function createRandomAppointment(){
-    let appointmentData = {
-         start_time:'2020-03-25 09:30:00',
-         end_time:'2020-03-25 11:30:00',
-         price:200,
-         status:'Pending'
-    };
+function createRandomAppointment() {
+  let appointmentData = {
+    start_time: '2020-03-25 09:30:00',
+    end_time: '2020-03-25 11:30:00',
+    price: 200,
+    status: 'Pending'
+  };
 
-    Axios.post('http://localhost:8080/appointments/', appointmentData)
-      .then(function(response) {
-        return;
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  }
+  Axios.post('http://localhost:8080/appointments/', appointmentData)
+    .then(function(response) {
+      console.log('created app!');
+      getAppointments();
+      return;
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
 
 //create random timeout and reset each time
-function loop(){
-    let rand = Math.round(Math.random() * (12000000 - 600000)) + 600000;
-    setTimeout(()=> {
-        createRandomAppointment();
-        this.getAppointments();
-        loop();
-      }, rand);
+function loop() {
+  //between 5 and 10 minutes)
+  let rand = Math.round(Math.random() * (12000000 - 600000)) + 600000;
+  setTimeout(() => {
+    createRandomAppointment();
+    //get all db entries after creation
+    getAppointments();
+    loop();
+  }, rand);
 }
 
 class List extends Component {
@@ -38,10 +41,10 @@ class List extends Component {
     super(props);
     this.state = {
       appointments: [],
-      searched: null,
+      result: null,
+      search: null,
       isOpen: false,
-      id: 0,
-      count: 0
+      id: 0
     };
     this.deleteAppointment = this.deleteAppointment.bind(this);
     this.openModal = this.openModal.bind(this);
@@ -50,28 +53,27 @@ class List extends Component {
     this.getAppointments = this.getAppointments.bind(this);
   }
 
-  //each second, get appointments as random db entries occur
-   componentDidMount() {
+  //each second, call random entry loop
+  componentDidMount() {
     this.getAppointments();
-    this.interval = setInterval(() =>{
-
+    this.interval = setInterval(() => {
       loop();
-      }, 1000);
-    }
+    }, 1000);
+  }
 
-    componentWillUnmount() {
-      clearInterval(this.interval);
-    }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
 
-    formatDate(date){
-      let newDate = new Date(date).toLocaleString();
-      return newDate;
-    }
+  formatDate(date) {
+    let newDate = new Date(date).toLocaleString();
+    newDate = moment(newDate).format("MM/DD/YYYY hh:mmA");
+    return newDate;
+  }
 
-  getAppointments(){
+  getAppointments() {
     Axios.get('http://localhost:8080/appointments')
       .then(response => {
-        console.log('getting appointments');
         this.setState({
           appointments: response.data
         });
@@ -81,34 +83,51 @@ class List extends Component {
       })
   }
 
-
-    componentWillReceiveProps(props) {
-      if (props.result !== null) {
-        this.setState({ searched: props.result });
-        setTimeout(()=> {
-          this.filterAppointment();
-        }, 500);
-      };
-
-      if(props.result !== null && props.search == "" || undefined || null){
-        console.log('null search');
-      }
+  //if filter component has results, set state and call filter appointment function
+  componentWillReceiveProps(props) {
+    if (props.result !== null) {
+      this.setState({
+        result: props.result,
+        search: props.search
+      });
+      setTimeout(() => {
+        this.filterAppointment();
+      }, 500);
+    };
+    //show sorted results
+    if (props.sorted !== null) {
+      this.setState({
+        appointments: props.sorted
+      })
+    }
   }
 
+  //reset appointment resutls if filter is cleared
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.search == !prevState.search) {
+      this.setState({
+        result: null
+      });
+      this.getAppointments();
+    }
+  }
 
-  filterAppointment(props){
+  //filter by price ASC
+  filterAppointment(props) {
     let data = this.state.appointments;
-    let searched = this.state.searched;
-        data = data.filter(function(item){
-          return item.price == searched.price;
-        });
-    this.setState({
-      appointments: data
-    });
+    let result = this.state.result;
+    if (this.state.result !== null) {
+      data = data.filter(function(item) {
+        return item.price == result.price;
+      });
+      this.setState({
+        appointments: data
+      });
+    }
   }
 
-//open and close modal
-  openModal(id){
+  //open and close modal
+  openModal(id) {
     this.setState({
       isOpen: true,
       id: id
@@ -116,7 +135,7 @@ class List extends Component {
 
   }
 
-  closeModal(){
+  closeModal() {
     this.setState({
       isOpen: false
     });
@@ -133,7 +152,7 @@ class List extends Component {
       });
   }
 
-  render() {
+  render(props) {
     return (
       <div className="appointments">
          <table className="table">
@@ -158,7 +177,7 @@ class List extends Component {
                           <button className="btn btn-outline-secondary" onClick={(e)=>this.openModal(p.id)}>
                             View/Edit
                           </button>
-                          <button className="btn btn-outline-danger" onClick={(e)=>this.deleteAppointment(p.id)}>
+                          <button className="btn btn-outline-danger offset-2" onClick={(e)=>this.deleteAppointment(p.id)}>
                             Delete
                           </button>
                         </td>
@@ -182,6 +201,5 @@ class List extends Component {
     );
   }
 };
-
 
 export default List;

@@ -1,14 +1,9 @@
-h3 {
-  color: red;
-}
-
 #root {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
-
 
 /*Appointments CSS*/
 
@@ -17,15 +12,10 @@ h3 {
   flex-direction: column;
 }
 
-/*.viewAppointment {
-  display: flex;
-  justify-content: space-between;
-}*/
-
 .top {
   display: flex;
 }
-/*
-.modal-body {
-  height: 200px;
-}*/
+
+h6 {
+  font-size: 12px;
+}

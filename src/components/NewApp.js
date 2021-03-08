@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/button';
-
+import DateTimePicker from 'react-datetime-picker';
 
 class NewApp extends Component {
   constructor(props) {
@@ -41,15 +41,13 @@ class NewApp extends Component {
   handleSubmit(e, formControls) {
     e.preventDefault();
     Axios.post('http://localhost:8080/appointments/', this.state.formControls)
-      .then(function(response) {
+      .then(response => {
         this.props.closeModal();
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
       });
   }
-
-
 
   render() {
     return (
@@ -65,27 +63,43 @@ class NewApp extends Component {
       <Modal.Body>
         <Form>
           <Form.Group controlId="start_time">
-            <Form.Label>Start Date/Time</Form.Label>
-            <Form.Control type="text"
-              placeholder="Start Time"
-              name="start_time"
-              onChange={this.handleChange}
-            />
+          <Form.Label>Start Date/Time</Form.Label>
+          <Form.Control
+            type="datetime-local"
+            placeholder="Start Time"
+            name="start_time"
+            onChange={this.handleChange}
+          />
           </Form.Group>
 
           <Form.Group controlId="end_time">
             <Form.Label>End Date/Time</Form.Label>
-            <Form.Control type="text" placeholder="End Time" name="end_time" onChange={this.handleChange} />
+            <Form.Control
+              type="datetime-local"
+              placeholder="End Time"
+              name="end_time"
+              onChange={this.handleChange}
+            />
           </Form.Group>
 
            <Form.Group controlId="price">
             <Form.Label>Price</Form.Label>
-            <Form.Control type="text" placeholder="Price" name="price" onChange={this.handleChange} />
+            <Form.Control
+              type="text"
+              placeholder="Price"
+              name="price"
+              onChange={this.handleChange}
+            />
           </Form.Group>
 
            <Form.Group controlId="status">
             <Form.Label>Status</Form.Label>
-            <Form.Control type="text" placeholder="Status" name="status" onChange={this.handleChange} />
+            <Form.Control
+              type="text"
+              placeholder="Status"
+              name="status"
+              onChange={this.handleChange}
+            />
           </Form.Group>
         </Form>
       </Modal.Body>

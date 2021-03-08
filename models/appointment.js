@@ -1,7 +1,8 @@
 const db = require('../db/db');
 const Appointment = {};
 
-Appointment.findAll = () => db.query('SELECT * FROM appointments');
+//get all db entries sorted by date ascending
+Appointment.findAll = () => db.query('SELECT * FROM appointments ORDER BY start_time ASC');
 
 Appointment.findById = (id) => {
   return db.one(
@@ -10,13 +11,20 @@ Appointment.findById = (id) => {
   );
 }
 
-// select from appointments where start_time like
-
-Appointment.findByName = (start_time) => {
+// select all entries from appointments where input value like each column
+Appointment.findByName = (search) => {
   return db.one(
-    `SELECT * FROM appointments WHERE start_time::text LIKE $1`, [start_time]
+    'SELECT * FROM appointments WHERE start_time::text LIKE $1 OR end_time::text LIKE $1 OR price::text LIKE $1 or status::text LIKE $1', [search]
   );
 }
+
+//search DB for all appointments between two times
+Appointment.findByTime = (start, end) => {
+  return db.many(
+    'SELECT * FROM appointments WHERE start_time BETWEEN $1 AND $2', [start, end]
+  );
+}
+
 
 Appointment.create = (start_time, end_time, price, status) => {
   return db.one(

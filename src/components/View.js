@@ -17,13 +17,12 @@ class View extends Component {
     this.updateStatus = this.updateStatus.bind(this);
   };
 
-
-//call database to get individual appointment information based off id
+  //call database to get individual appointment information based off id
   componentDidMount(props) {
     Axios.get(`http://localhost:8080/appointments/${this.props.id}`)
       .then((response) => {
-       this.setState({
-          start_time:response.data.start_time,
+        this.setState({
+          start_time: response.data.start_time,
           end_time: response.data.end_time,
           price: response.data.price,
           status: response.data.status,
@@ -36,24 +35,30 @@ class View extends Component {
   }
 
   //update individual appointment with new status information
-   updateStatus() {
-      Axios.put(`http://localhost:8080/appointments/${this.state.id}`, {
-          start_time: this.state.start_time,
-          end_time: this.state.end_time,
-          price: this.state.price,
-          status: this.state.status
-        })
-        .then(response => {
-          this.props.closeModal();
-        })
-        .catch(error => {
-          console.log(err);
-        });
-    }
+  updateStatus() {
+    Axios.put(`http://localhost:8080/appointments/${this.state.id}`, {
+        start_time: this.state.start_time,
+        end_time: this.state.end_time,
+        price: this.state.price,
+        status: this.state.status
+      })
+      .then(response => {
+        this.props.closeModal();
+      })
+      .catch(error => {
+        console.log(err);
+      });
+  }
 
-// https://flaviocopes.com/react-edit-doubleclick/ referenced for doubleclick functionality
+  getEndTime() {
+    let time = this.props.formatDate(this.state.end_time);
+    console.log('time: ' + time);
+    let final = time.split(' ').slice(-1);
+    return final;
+  }
+
+  //on doubleclick, make item editable. ternary operator shows either <p> or <input/>
   render() {
-    // console.log(this.props);
     return (
       <div className="viewAppointment">
         <Modal
@@ -65,9 +70,9 @@ class View extends Component {
             <Modal.Title>View Appointment</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-             <h3>{this.props.formatDate(this.state.start_time)}</h3>
-             <p>{this.props.formatDate(this.state.end_time)}</p>
-             <p>{this.state.price}</p>
+             <p>Start Time: {this.props.formatDate(this.state.start_time)}</p>
+             <p>End Time: {this.props.formatDate(this.state.end_time)} {this.getEndTime.bind(this)}</p>
+             <p>Price: {this.state.price}</p>
             { this.state.edit ?
                 <input
                 type="text"
@@ -89,8 +94,9 @@ class View extends Component {
                       edit: true
                     })
                   }}
-                >{this.state.status}</p>
+                >Status: {this.state.status}</p>
               }
+              <h6 className="text-muted">Double click above to change status</h6>
              <br/>
           </Modal.Body>
           <Modal.Footer>
