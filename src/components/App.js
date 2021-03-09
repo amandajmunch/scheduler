@@ -79,6 +79,7 @@ class App extends Component {
     });
   }
 
+//format times to display in ISOString for database. Search database for items, sort by price ASC.
   onFilter(e) {
     e.preventDefault();
     let start = this.state.startdate;
@@ -102,13 +103,21 @@ class App extends Component {
     });
   }
 
+//on click, clear filtering
   clearSort(e) {
     e.preventDefault();
     this.setState({
       startdate: '',
       enddate: '',
-      clear: true
+      clear: true,
+      sorted: null
     });
+
+    this.interval = setInterval(() => {
+      this.setState({
+        clear: false
+      })
+    }, 500);
   }
 
   //ternary operator, if openModal state is true, display modal. False, display none
