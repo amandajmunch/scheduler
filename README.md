@@ -1,10 +1,16 @@
-Install Docker if not on machine
-install psql
+### Appointment Scheduler
 
+## How to run
 
-run docker run --name postgres-0 -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres:alpine
-remember container name
-cat ./db/seed.sql | docker exec -i ${CONTAINER NAME} psql -U postgres -d nielsen
+Install Docker and postgresql if not currently on machine. 
+CD into app folder and run npm install. 
+
+# Seed DB
+
+Run 'docker run --name postgres-0 -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres:alpine';
+Remember the container name and run the below command.
+
+'cat ./db/seed.sql | docker exec -i ${CONTAINER NAME} psql -U postgres -d nielsen'; 
 
 psql -h localhost -p ${LOCALHOST} -U postgres to view table 
 )

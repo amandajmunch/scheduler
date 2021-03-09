@@ -13,7 +13,7 @@ Appointment.findById = (id) => {
 
 // select all entries from appointments where input value like each column
 Appointment.findByName = (search) => {
-  return db.one(
+  return db.many(
     'SELECT * FROM appointments WHERE start_time::text LIKE $1 OR end_time::text LIKE $1 OR price::text LIKE $1 or status::text LIKE $1', [search]
   );
 }

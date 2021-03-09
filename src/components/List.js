@@ -49,7 +49,6 @@ class List extends Component {
     this.deleteAppointment = this.deleteAppointment.bind(this);
     this.openModal = this.openModal.bind(this);
     this.formatDate = this.formatDate.bind(this);
-    this.filterAppointment = this.filterAppointment.bind(this);
     this.getAppointments = this.getAppointments.bind(this);
   }
 
@@ -87,12 +86,9 @@ class List extends Component {
   componentWillReceiveProps(props) {
     if (props.result !== null) {
       this.setState({
-        result: props.result,
+        appointments: props.result,
         search: props.search
       });
-      setTimeout(() => {
-        this.filterAppointment();
-      }, 500);
     };
     //show sorted results
     if (props.sorted !== null) {
@@ -105,24 +101,7 @@ class List extends Component {
   //reset appointment resutls if filter is cleared
   componentDidUpdate(prevProps, prevState) {
     if (this.state.search == !prevState.search) {
-      this.setState({
-        result: null
-      });
-      this.getAppointments();
-    }
-  }
-
-  //filter by price ASC
-  filterAppointment(props) {
-    let data = this.state.appointments;
-    let result = this.state.result;
-    if (this.state.result !== null) {
-      data = data.filter(function(item) {
-        return item.price == result.price;
-      });
-      this.setState({
-        appointments: data
-      });
+        this.getAppointments();
     }
   }
 

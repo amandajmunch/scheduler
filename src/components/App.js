@@ -45,6 +45,14 @@ class App extends Component {
     this.setState({ search: e.target.value });
   }
 
+  componentDidUpdate(){
+    if(this.state.search == "" && this.state.result !== null){
+      this.setState({
+        result: null
+      })
+    }
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     Axios.get(`http://localhost:8080/appointments/search/${this.state.search}`)
@@ -95,7 +103,8 @@ class App extends Component {
   clearSort() {
     this.setState({
       startdate: '',
-      enddate: ''
+      enddate: '',
+      sorted: null
     });
   }
 
