@@ -15,7 +15,8 @@ class App extends Component {
       result: null,
       sorted: null,
       startdate: '',
-      enddate: ''
+      enddate: '',
+      clear: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -58,7 +59,7 @@ class App extends Component {
     Axios.get(`http://localhost:8080/appointments/search/${this.state.search}`)
       .then(response => {
         this.setState({
-          result: response.data
+          result: response.data,
         });
       })
       .catch(e => {
@@ -93,18 +94,20 @@ class App extends Component {
       let data = response.data;
       data = data.sort((a, b) => (a.price > b.price) ? 1 : -1);
       this.setState({
-        sorted: data
+        sorted: data,
+        clear: false
       });
     }).catch(function(error) {
       console.log('error with filter:' + error);
     });
   }
 
-  clearSort() {
+  clearSort(e) {
+    e.preventDefault();
     this.setState({
       startdate: '',
       enddate: '',
-      sorted: null
+      clear: true
     });
   }
 
@@ -130,6 +133,7 @@ class App extends Component {
             result={this.state.result}
             search={this.state.search}
             sorted={this.state.sorted}
+            clear={this.state.clear}
           />
           <button className="btn btn-outline-info" onClick={this.openModal.bind(this)}>Add Appointment</button>
           { this.state.isOpen ?

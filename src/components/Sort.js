@@ -38,7 +38,7 @@ class Sort extends Component {
               <button type="submit" className="btn btn-outline-primary" onClick={(e)=>this.props.onFilter(e)}>Filter</button>
             </div>
             <div className="col-sm-2 form-group">
-              <button type="submit" className="btn btn-outline-primary" onClick={(e)=>this.props.clearSort()}>Clear</button>
+              <button type="submit" className="btn btn-outline-primary" onClick={(e)=>this.props.clearSort(e)}>Clear</button>
             </div>
           </div>
         </form>

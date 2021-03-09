@@ -41,7 +41,6 @@ class List extends Component {
     super(props);
     this.state = {
       appointments: [],
-      result: null,
       search: null,
       isOpen: false,
       id: 0
@@ -100,7 +99,7 @@ class List extends Component {
 
   //reset appointment resutls if filter is cleared
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.search == !prevState.search) {
+    if (this.state.search == !prevState.search || this.props.clear == true) {
         this.getAppointments();
     }
   }
